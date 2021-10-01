@@ -3,6 +3,7 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const cards = document.querySelector('.cards');
 import axios from 'axios';
 axios.get('https://api.github.com/users/LmCastelli')
 /*
@@ -12,9 +13,9 @@ axios.get('https://api.github.com/users/LmCastelli')
 
     Skip to STEP 3 (line 34).
 */
+
 .then(resp => {
   console.log(resp);
-  const cards = document.querySelector('.cards');
   const newGit = githubMaker(resp.data)
   cards.appendChild(newGit);
 })
@@ -40,7 +41,24 @@ axios.get('https://api.github.com/users/LmCastelli')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"]
+
+followersArray.forEach(element => {
+  axios.get(`https://api.github.com/users/${element}`)
+  .then(resp => {
+
+    console.log(resp)
+    cards.appendChild(githubMaker(resp.data))
+  })
+  .catch(err => {
+    console.error(err)
+  })
+})
+  
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -82,12 +100,12 @@ function githubMaker(obj) {
   image.src = obj.avatar_url;
   humanName.textContent = obj.name
   username.textContent = obj.login
-  userLocation.textContent = obj.location
-  Profile.textContent = "Profile"
+  userLocation.textContent = `Location: ${obj.location}`
+  Profile.textContent = "Profile: "
   address.textContent = obj.html_url
-  Followers.textContent = obj.followers
-  Following.textContent = obj.following
-  userBio.textContent = obj.bio
+  Followers.textContent = `Followers: ${obj.followers}`
+  Following.textContent = `Following: ${obj.following}`
+  userBio.textContent = `Bio: ${obj.bio}`
 
   card.classList.add('card');
   cardInfo.classList.add('card-info');
@@ -111,9 +129,5 @@ function githubMaker(obj) {
 
 /*
   List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
+    
 */
