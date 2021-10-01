@@ -3,7 +3,9 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+const cards = document.querySelector('.cards');
+import axios from 'axios';
+axios.get('https://api.github.com/users/LmCastelli')
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -12,6 +14,17 @@
     Skip to STEP 3 (line 34).
 */
 
+.then(resp => {
+  console.log(resp);
+  const newGit = githubMaker(resp.data)
+  cards.appendChild(newGit);
+})
+.catch(err => {
+  console.error(err);
+})
+.finally(() =>{
+  console.log("FINALLY");
+})
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
@@ -28,7 +41,24 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"]
+
+followersArray.forEach(element => {
+  axios.get(`https://api.github.com/users/${element}`)
+  .then(resp => {
+
+    console.log(resp)
+    cards.appendChild(githubMaker(resp.data))
+  })
+  .catch(err => {
+    console.error(err)
+  })
+})
+  
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -50,11 +80,54 @@ const followersArray = [];
     </div>
 */
 
+function githubMaker(obj) {
+  
+// Create Elements
+  const card = document.createElement('div');
+  const image = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const humanName = document.createElement('h3');
+  const username = document.createElement('p');
+  const userLocation = document.createElement('p');
+  const Profile = document.createElement('p');
+  const address = document.createElement('a');
+  const Followers = document.createElement('p');
+  const Following = document.createElement('p');
+  const userBio = document.createElement('p');
+
+// Add context
+  
+  image.src = obj.avatar_url;
+  humanName.textContent = obj.name
+  username.textContent = obj.login
+  userLocation.textContent = `Location: ${obj.location}`
+  Profile.textContent = "Profile: "
+  address.textContent = obj.html_url
+  Followers.textContent = `Followers: ${obj.followers}`
+  Following.textContent = `Following: ${obj.following}`
+  userBio.textContent = `Bio: ${obj.bio}`
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  humanName.classList.add('name');
+  username.classList.add('username');
+// Structure
+  card.appendChild(image)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(humanName)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(userLocation)
+  cardInfo.appendChild(Profile)
+  Profile.appendChild(address)
+  cardInfo.appendChild(Followers)
+  cardInfo.appendChild(Following) 
+  cardInfo.appendChild(userBio)
+  
+  console.log(card);
+  return card;
+}
+
 /*
   List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
+    
 */
