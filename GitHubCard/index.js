@@ -14,6 +14,9 @@ axios.get('https://api.github.com/users/LmCastelli')
 */
 .then(resp => {
   console.log(resp);
+  const cards = document.querySelector('.cards');
+  const newGit = githubMaker(resp.data)
+  cards.appendChild(newGit);
 })
 .catch(err => {
   console.error(err);
@@ -59,7 +62,9 @@ const followersArray = [];
     </div>
 */
 
-function githubMaker({imageURL, name, userName, location, pageAddress, followerCount, followingCount, userBio}) {
+function githubMaker(obj) {
+  
+// Create Elements
   const card = document.createElement('div');
   const image = document.createElement('img');
   const cardInfo = document.createElement('div');
@@ -70,32 +75,38 @@ function githubMaker({imageURL, name, userName, location, pageAddress, followerC
   const address = document.createElement('a');
   const Followers = document.createElement('p');
   const Following = document.createElement('p');
-  const bio = document.createElement('p');
+  const userBio = document.createElement('p');
 
+// Add context
+  
+  image.src = obj.avatar_url;
+  humanName.textContent = obj.name
+  username.textContent = obj.login
+  userLocation.textContent = obj.location
+  Profile.textContent = "Profile"
+  address.textContent = obj.html_url
+  Followers.textContent = obj.followers
+  Following.textContent = obj.following
+  userBio.textContent = obj.bio
 
   card.classList.add('card');
-
-  image.src = imageURL;
-
   cardInfo.classList.add('card-info');
-
-  humanName.textContent = `${name}`
   humanName.classList.add('name');
-
-  username.textContent = `${userName}`
   username.classList.add('username');
-
-  userLocation.textContent = `${location}`
-
-  address.textContent = `${pageAddress}`
-
-  Followers.textContent = `${followerCount}`
-  Following.textContent = `${followingCount}`
-
-  bio.textContent = `${userBio}`
-
+// Structure
+  card.appendChild(image)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(humanName)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(userLocation)
+  cardInfo.appendChild(Profile)
+  Profile.appendChild(address)
+  cardInfo.appendChild(Followers)
+  cardInfo.appendChild(Following) 
+  cardInfo.appendChild(userBio)
   
-  
+  console.log(card);
+  return card;
 }
 
 /*
